@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  hiring-pipeline:
+    build: .
+    container_name: voidr-hiring-pipeline
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      # MongoDB
+      - MONGODB_URI=${MONGODB_URI}
+      # Apify
+      - APIFY_TOKEN=${APIFY_TOKEN}
+      # Anthropic
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      # Resend
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - RESEND_TEMPLATE_ID=${RESEND_TEMPLATE_ID:-job-candidates-technical-challenge}
+      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-hiring@voidr.co}
+      # Roam
+      - ROAM_API_KEY=${ROAM_API_KEY}
+      - ROAM_CONVERSION_CHAT_ID=${ROAM_CONVERSION_CHAT_ID}
+      # Service
+      - WEBHOOK_BASE_URL=${WEBHOOK_BASE_URL:-http://localhost:8080}
+      - SCORE_THRESHOLD=${SCORE_THRESHOLD:-10}
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); });"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,47 @@
+substitutions:
+  _PROJECT_ID: perceptive-bay-340802
+  _REGION: us-central1
+  _REPOSITORY: voidr-internal
+
+steps:
+  # Add service build steps here as services are added
+  # Example:
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args:
+  #     - 'build'
+  #     - '-t'
+  #     - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY}/internal-{service-name}:$BUILD_ID'
+  #     - '-t'
+  #     - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY}/internal-{service-name}:latest'
+  #     - './src/{service-name}'
+  #   id: 'build-{service-name}'
+  #
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args:
+  #     - 'push'
+  #     - '--all-tags'
+  #     - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY}/internal-{service-name}'
+  #   id: 'push-{service-name}'
+  #   waitFor: ['build-{service-name}']
+  #
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #   entrypoint: gcloud
+  #   args:
+  #     - 'run'
+  #     - 'services'
+  #     - 'update'
+  #     - 'internal-{service-name}'
+  #     - '--image=${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY}/internal-{service-name}:$BUILD_ID'
+  #     - '--region=${_REGION}'
+  #     - '--platform=managed'
+  #   id: 'deploy-{service-name}'
+  #   waitFor: ['push-{service-name}']
+
+images: []
+  # Add image references here as services are added
+  # Example:
+  # - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY}/internal-{service-name}:$BUILD_ID'
+  # - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY}/internal-{service-name}:latest'
+
+timeout: 1800s
+

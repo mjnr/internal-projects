@@ -1,0 +1,23 @@
+# Example Dockerfile for Cloud Run Job
+# Based on Playwright example, but can be adapted for any job runtime
+
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies (use --production for smaller images if no dev deps needed)
+RUN npm install --production
+
+# Copy application code
+COPY . .
+
+# Set production environment
+ENV NODE_ENV=production
+
+# Cloud Run Job entry point
+# Override CMD when creating the job: --command="node" --args="job.js"
+CMD ["node", "job.js"]
+
