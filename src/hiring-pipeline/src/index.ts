@@ -7,6 +7,9 @@ import { webhookRouter } from './routes/webhook.js';
 
 const app = express();
 
+// Base path for the service (matches load balancer path rule)
+const BASE_PATH = '/hiring-pipeline';
+
 // Middleware
 app.use(express.json());
 
@@ -19,9 +22,9 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use('/apply', limiter);
+app.use(`${BASE_PATH}/apply`, limiter);
 
-// Health check
+// Health check (both root and base path for flexibility)
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
@@ -30,7 +33,19 @@ app.get('/health', (_req, res) => {
   });
 });
 
-// Routes
+app.get(`${BASE_PATH}/health`, (_req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'hiring-pipeline',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Routes (mounted under base path)
+app.use(`${BASE_PATH}/apply`, applyRouter);
+app.use(`${BASE_PATH}/webhook`, webhookRouter);
+
+// Also mount at root for local development
 app.use('/apply', applyRouter);
 app.use('/webhook', webhookRouter);
 

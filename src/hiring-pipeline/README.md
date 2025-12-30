@@ -23,6 +23,18 @@ Site Voidr → POST /apply → Salva candidatura → Inicia scraping Apify
 
 ## Endpoints
 
+### Produção (via Load Balancer)
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| POST | `/hiring-pipeline/apply` | Receber nova candidatura |
+| GET | `/hiring-pipeline/apply/roles` | Listar vagas disponíveis |
+| GET | `/hiring-pipeline/apply/:id` | Consultar status de candidatura |
+| POST | `/hiring-pipeline/webhook/apify` | Callback do Apify após scraping |
+| GET | `/hiring-pipeline/health` | Health check |
+
+### Desenvolvimento Local
+
 | Método | Rota | Descrição |
 |--------|------|-----------|
 | POST | `/apply` | Receber nova candidatura |
@@ -64,7 +76,7 @@ Site Voidr → POST /apply → Salva candidatura → Inicia scraping Apify
 | `RESEND_FROM_EMAIL` | Email remetente | Não (default: hiring@voidr.co) |
 | `ROAM_API_KEY` | API Key do Roam | Sim |
 | `ROAM_CONVERSION_CHAT_ID` | ID do chat para notificações | Sim |
-| `WEBHOOK_BASE_URL` | URL base para webhooks | Sim |
+| `WEBHOOK_BASE_URL` | URL base para webhooks (ex: https://internal.voidr.co/hiring-pipeline) | Sim |
 | `SCORE_THRESHOLD` | Score mínimo para aprovação | Não (default: 10) |
 | `PORT` | Porta do servidor | Não (default: 8080) |
 
@@ -102,7 +114,18 @@ docker-compose logs -f
 ```bash
 # Provisionar no Cloud Run
 ./provision-new-service.sh hiring-pipeline 8080
+
+# Após provisionar, configurar variáveis de ambiente:
+gcloud run services update gtm-hiring-pipeline \
+  --region=us-central1 \
+  --update-env-vars="MONGODB_URI=mongodb+srv://...,APIFY_TOKEN=apify_api_xxx,ANTHROPIC_API_KEY=sk-ant-xxx,RESEND_API_KEY=re_xxx,ROAM_API_KEY=rmk-xxx,ROAM_CONVERSION_CHAT_ID=xxx,WEBHOOK_BASE_URL=https://internal.voidr.co/hiring-pipeline"
 ```
+
+### URLs após deploy
+
+- **Health check**: `https://internal.voidr.co/hiring-pipeline/health`
+- **Candidatura**: `POST https://internal.voidr.co/hiring-pipeline/apply`
+- **Listar vagas**: `GET https://internal.voidr.co/hiring-pipeline/apply/roles`
 
 ## Scorecard de Avaliação
 

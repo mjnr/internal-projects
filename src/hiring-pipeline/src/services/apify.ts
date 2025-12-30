@@ -41,6 +41,8 @@ export async function startLinkedInScraping(
   linkedinUrl: string,
   applicationId: string
 ): Promise<string> {
+  // WEBHOOK_BASE_URL should be the full base URL including the service path
+  // e.g., https://internal.voidr.co/hiring-pipeline
   const webhookUrl = `${env.WEBHOOK_BASE_URL}/webhook/apify?applicationId=${applicationId}`;
 
   const response = await fetch(

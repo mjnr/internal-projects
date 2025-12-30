@@ -24,6 +24,7 @@ services:
       - ROAM_API_KEY=${ROAM_API_KEY}
       - ROAM_CONVERSION_CHAT_ID=${ROAM_CONVERSION_CHAT_ID}
       # Service
+      # For local dev, use root path. For production, use https://internal.voidr.co/hiring-pipeline
       - WEBHOOK_BASE_URL=${WEBHOOK_BASE_URL:-http://localhost:8080}
       - SCORE_THRESHOLD=${SCORE_THRESHOLD:-10}
     healthcheck:
